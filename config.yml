@@ -1,0 +1,59 @@
+#########################################
+#	  TooManyPerms v1.0.1-ALPHA         #
+#      Coded by Alex_Delpier02          #
+#   "No matter what, NSSJ all life"     #
+#                                       #
+# github.com/AlexDelpier02/TooManyPerms #
+#########################################
+
+Operators:
+  Nick-check: true
+  UUID-check: true
+  Nicknames: # If Nick-check is set to false, you can clear this section
+  - example1
+  - example2
+  - pompiere1
+  UUIDs: # If UUID-check is set to false, you can clear this section
+  - 80e74556-3daa-397e-8982-4f3ab0042a5d
+
+Permissions:
+  '*':
+    Nick-check: true
+    UUID-check: true
+    Nicknames: # If Nick-check is set to false, you can clear this section
+    - example1
+    - example2
+    - pompiere1
+    UUIDs: # If UUID-check is set to false, you can clear this section
+    - 80e74556-3daa-397e-8982-4f3ab0042a5d
+  'permissions_*':
+    Nick-check: true
+    UUID-check: true
+    Nicknames:
+    - example1
+    - example2
+    - pompiere1
+    UUIDs:
+    - 80e74556-3daa-397e-8982-4f3ab0042a5d
+
+Punish: true
+Punish Commands: #Type here as many CONSOLE commands as you want! It will trigger when someone has too many perms
+- "ban %player% You''re not welcome"
+- "say %player% got too many permissions"
+
+Messages:
+  Prefix: "&8[&bTooManyPerms&8] "
+  Not-Enough-Permissions: "&cNot enough permissions!"
+  Success-Reload: "&aPlugin successfully reloaded!"
+  Perm-Not-Protected: "&aThe perm %perm% is not protected!"
+  Op-Nicks-List: "&9Protected nicks for operators: %list%"
+  Op-UUIDs-List: "&9Protected UUIDs for operators: %list%"
+  Perm-Nicks-List: "&9Protected nicks for %perm%: %list%"
+  Perm-UUIDs-List: "&9Protected UUIDs for %perm%: %list%"
+
+Help Lines: #At the moment, the commands are /tmp <reload|opcheck|check [perm]>, customize it as you want!
+- "&7&m-----&8[&bTooManyPerms&8]&7&m-----"
+- " &b&l/tmp check <perm> &7- Granted users' list"
+- " &b&l/tmp opcheck &7- Granted ops' list"
+- " &b&l/tmp reload &7- Reload config.yml"
+- "&7&m------------------------------"

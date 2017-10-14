@@ -1,0 +1,6 @@
+name: TooManyPerms
+author: Alex_Delpier02
+version: 1.0.1-ALPHA
+main: me.alex.toomanyperms.Main
+commands:
+  tmp:
