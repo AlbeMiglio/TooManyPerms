@@ -1,0 +1,58 @@
+#
+#     TooManyPerms v1.0.2-BETA
+#      Coded by Alex_Delpier02
+#   "No matter what, NSSJ all life"
+#
+# github.com/AlexDelpier02/TooManyPerms
+#
+Operators:
+  Nick-check: true
+  UUID-check: false
+  Nicknames: # If Nick-check is set to false, you can clear this section
+  - Alex_Delpier02
+  - pompiere1
+  - example1
+  UUIDs: # If UUID-check is set to false, you can clear this section
+  - 80e74556-3daa-397e-8982-4f3ab0042a5d
+
+Permissions:
+  '*':
+    Nick-check: true
+    UUID-check: false
+    Nicknames: # If Nick-check is set to false, you can clear this section
+    - Alex_Delpier02
+    - pompiere1
+    - example1
+    UUIDs: # If UUID-check is set to false, you can clear this section
+    - 80e74556-3daa-397e-8982-4f3ab0042a5d
+  'permissions_*': # IMPORTANT! You MUST NOT type points in these permissions! Use underscore ( _ ) instead!
+    Nick-check: true
+    UUID-check: false
+    Nicknames:
+    - Alex_Delpier02
+    - pompiere1
+    - example1
+    UUIDs:
+    - 80e74556-3daa-397e-8982-4f3ab0042a5d
+    
+Groups:
+  Owner:
+    Nick-check: true
+    UUID-check: false
+    Nicknames: # If Nick-check is set to false, you can clear this section
+    - Alex_Delpier02
+    - pompiere1
+    - example1
+    UUIDs: # If UUID-check is set to false, you can clear this section
+    - 80e74556-3daa-397e-8982-4f3ab0042a5d
+  Admin:
+    Nick-check: true
+    UUID-check: false
+    Nicknames: 
+    - Alex_Delpier02
+    - pompiere1
+    - example1
+    UUIDs: 
+    - 80e74556-3daa-397e-8982-4f3ab0042a5d
+    
+  

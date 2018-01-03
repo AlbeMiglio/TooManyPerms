@@ -1,0 +1,11 @@
+#
+#     TooManyPerms v1.0.2-BETA
+#      Coded by Alex_Delpier02
+#   "No matter what, NSSJ all life"
+#
+# github.com/AlexDelpier02/TooManyPerms
+#
+Punish: true
+Punish Commands: #Type here as many CONSOLE commands as you want! It will trigger when someone has too many perms
+- "@ban %player% You're not welcome"
+- "@say %player% got too many permissions"

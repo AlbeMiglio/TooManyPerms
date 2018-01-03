@@ -1,6 +1,33 @@
 name: TooManyPerms
 author: Alex_Delpier02
-version: 1.0.1-ALPHA
-main: me.alex.toomanyperms.Main
+website: github.com/AlexDelpier02/TooManyPerms/
+version: 1.0.2-BETA
+main: it.mycraft.toomanyperms.TooManyPerms
+depend: [PermissionsEx]
 commands:
-  tmp:
+  tmp: 
+permissions:
+  tmp.admin:
+    default: op
+    children:
+      tmp.use: true
+      tmp.reload: true
+      tmp.check: true
+      tmp.opcheck: true
+      tmp.groupcheck: true
+  tmp.checks:
+    default: op
+    children:
+      tmp.check: true
+      tmp.opcheck: true
+      tmp.groupcheck: true
+  tmp.use: 
+    default: false
+  tmp.reload: 
+    default: false
+  tmp.check:
+    default: false
+  tmp.opcheck:
+    default: false
+  tmp.groupcheck: 
+    default: false
