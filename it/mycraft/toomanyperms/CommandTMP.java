@@ -40,7 +40,6 @@ public class CommandTMP implements CommandExecutor {
                 	main.reloadConfig(new File(main.getDataFolder(), "permissions"));
                 	main.reloadConfig(new File(main.getDataFolder(), "punishments"));
                 	}
-                    main.saveConfig();
                     sender.sendMessage(color(getConfig("messages").getString("Messages.Success-Reload")));
                     return false;
                 }
