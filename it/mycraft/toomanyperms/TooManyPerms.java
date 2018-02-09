@@ -39,6 +39,7 @@ public class TooManyPerms extends JavaPlugin {
         getYAML(new File(getDataFolder(), "permissions.yml"));
         getYAML(new File(getDataFolder(), "punishments.yml"));
         getCommand("tmp").setExecutor(new CommandTMP());
+        reloadConfiguration();
         Bukkit.getConsoleSender().sendMessage(prefix("&aEnabling..."));
         Bukkit.getConsoleSender().sendMessage(prefix("&aEnabled!"));
         
