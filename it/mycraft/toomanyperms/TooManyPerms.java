@@ -23,16 +23,21 @@ import java.util.ArrayList;
 import java.util.logging.Level;
 
 public class TooManyPerms extends JavaPlugin {
+	
     private static TooManyPerms instance;
-
     public static TooManyPerms getInstance() { return instance; }
+    private FileConfiguration config;
+    private FileConfiguration messages;
+    private FileConfiguration permissions;
+    private FileConfiguration punishments;
 
     public void onEnable() {
     	
         instance = this;
-        getYAML(new File(getDataFolder(), "messages"));
-        getYAML(new File(getDataFolder(), "permissions"));
-        getYAML(new File(getDataFolder(), "punishments"));
+        getYAML(new File(getDataFolder(), "config.yml"));
+        getYAML(new File(getDataFolder(), "messages.yml"));
+        getYAML(new File(getDataFolder(), "permissions.yml"));
+        getYAML(new File(getDataFolder(), "punishments.yml"));
         getCommand("tmp").setExecutor(new CommandTMP());
         Bukkit.getConsoleSender().sendMessage(prefix("&aEnabling..."));
         Bukkit.getConsoleSender().sendMessage(prefix("&aEnabled!"));
@@ -48,22 +53,48 @@ public class TooManyPerms extends JavaPlugin {
         }, 30L, 30L);
     }
     
-    public void reloadConfig(File resourcePath) {
+    public void reloadConfiguration() {
+    	
+    	this.config = YamlConfiguration.loadConfiguration(new File(getDataFolder(), "config.yml"));
+    	this.messages = YamlConfiguration.loadConfiguration(new File(getDataFolder(), "messages.yml"));
+    	this.permissions = YamlConfiguration.loadConfiguration(new File(getDataFolder(), "permissions.yml"));
+    	this.punishments = YamlConfiguration.loadConfiguration(new File(getDataFolder(), "punishments.yml"));
       
-      InputStream defConfigStream = getResource(resourcePath.getName()+".yml");
-      if (defConfigStream == null) {
-        return;
-      }
-      getConfig(resourcePath.getName()).setDefaults(YamlConfiguration.loadConfiguration(new InputStreamReader(defConfigStream, Charsets.UTF_8)));
+        InputStream defConfigStream = getResource("config.yml");
+        InputStream defMessagesStream = getResource("messages.yml");
+        InputStream defPermissionsStream = getResource("permissions.yml");
+        InputStream defPunishmentsStream = getResource("punishments.yml");
+      
+        if((defConfigStream == null)
+        || (defMessagesStream == null)
+        || (defPermissionsStream == null)
+        || (defPunishmentsStream == null)) { return; }
+      
+        this.config.setDefaults(YamlConfiguration.loadConfiguration(new InputStreamReader(defConfigStream, Charsets.UTF_8)));
+        this.messages.setDefaults(YamlConfiguration.loadConfiguration(new InputStreamReader(defMessagesStream, Charsets.UTF_8)));
+        this.permissions.setDefaults(YamlConfiguration.loadConfiguration(new InputStreamReader(defPermissionsStream, Charsets.UTF_8)));
+        this.punishments.setDefaults(YamlConfiguration.loadConfiguration(new InputStreamReader(defPunishmentsStream, Charsets.UTF_8)));
     }
     
-    public FileConfiguration getConfig(String fileName) {
-        return YamlConfiguration.loadConfiguration(new File(getDataFolder()+"/"+fileName+".yml"));
+    public FileConfiguration getConfig() {
+        return this.config;
+    }
+    
+    public FileConfiguration getMessages() {
+    	return this.messages;
+    }
+    
+    public FileConfiguration getPermissions() {
+    	return this.permissions;
+    }
+    
+    public FileConfiguration getPunishments() {
+    	return this.punishments;
     }
     
     private void getYAML(File resourcePath) {
         if(!resourcePath.exists()) {
-            createYAML(resourcePath.getName()+".yml", false);
+            createYAML(resourcePath.getName(), false);
         }
     }
     
@@ -108,8 +139,8 @@ public class TooManyPerms extends JavaPlugin {
     }
     
     private String prefix(String message) {
-        if(getConfig("messages").getBoolean("Messages.Use-Prefix")) {
-        	String prefix = getConfig("messages").getString("Messages.Prefix");
+        if(getMessages().getBoolean("Messages.Use-Prefix")) {
+        	String prefix = getMessages().getString("Messages.Prefix");
         	return color(prefix + message);
         }
         else return color(message);
@@ -120,8 +151,8 @@ public class TooManyPerms extends JavaPlugin {
     }
     
     private void punishPlayer(Player target) {
-    	if (getConfig("punishments").getBoolean("Punish")) {
-            for (String commandline : getConfig("punishments").getStringList("Punish Commands")) {
+    	if (getPunishments().getBoolean("Punish")) {
+            for (String commandline : getPermissions().getStringList("Punish Commands")) {
             	if(commandline.startsWith("@")) {
                 getServer().dispatchCommand(getServer().getConsoleSender(), color(commandline
                 		.replaceAll("%player%", target.getName())
@@ -136,8 +167,9 @@ public class TooManyPerms extends JavaPlugin {
 
     private void checkPlayer(Player target) {
     	/* Check for unfair operators, you just have to enable in config Nick-check and/or UUID-check! */
-        if (getConfig("permissions").getBoolean("Operators.UUID-check")) {
-            if (!getConfig("permissions").getStringList("Operators.UUIDs").contains(target.getUniqueId().toString())) {
+    if(getConfig().getBoolean("Checks.OP")) {
+        if (getPermissions().getBoolean("Operators.UUID-check")) {
+            if (!getPermissions().getStringList("Operators.UUIDs").contains(target.getUniqueId().toString())) {
                 if (target.isOp()) {
                     target.setOp(false);
                     punishPlayer(target);
@@ -146,8 +178,8 @@ public class TooManyPerms extends JavaPlugin {
                 }
             }
         }
-        if (getConfig("permissions").getBoolean("Operators.Nick-check")) {
-            if (!getConfig("permissions").getStringList("Operators.Nicknames").contains(target.getName())) {
+        if (getPermissions().getBoolean("Operators.Nick-check")) {
+            if (!getPermissions().getStringList("Operators.Nicknames").contains(target.getName())) {
                 if (target.isOp()) {
                     target.setOp(false);
                     punishPlayer(target);
@@ -156,19 +188,21 @@ public class TooManyPerms extends JavaPlugin {
                 }
             }
         }
+    }
         /* Check for unfair permissions, just add in config as many permissions as you want! 100% lag-free! */
-        for (String permission : getConfig("permissions").getConfigurationSection("Permissions").getKeys(false)) {
+    if(getConfig().getBoolean("Checks.Permissions")) {
+        for (String permission : getPermissions().getConfigurationSection("Permissions").getKeys(false)) {
             if (target.hasPermission(permission.replaceAll("_", "."))) {
-                if (getConfig("permissions").getBoolean("Permissions." + permission + ".Nick-check")) {
-                    if (!getConfig("permissions").getStringList("Permissions." + permission + ".Nicknames").contains(target.getName())) {
+                if (getPermissions().getBoolean("Permissions." + permission + ".Nick-check")) {
+                    if (!getPermissions().getStringList("Permissions." + permission + ".Nicknames").contains(target.getName())) {
                     	PermissionsEx.getUser(target).removePermission(permission.replaceAll("_", "."));
                         punishPlayer(target);
                         UnfairPermsDetectedEvent event = new UnfairPermsDetectedEvent(target, permission.replaceAll("_", "."));
                         Bukkit.getPluginManager().callEvent(event);
                     }
                 }
-                if (getConfig("permissions").getBoolean("Permissions." + permission + ".UUID-check")) {
-                    if (!getConfig("permissions").getStringList("Permissions." + permission + ".UUIDs").contains(target.getUniqueId().toString())) {
+                if (getPermissions().getBoolean("Permissions." + permission + ".UUID-check")) {
+                    if (!getPermissions().getStringList("Permissions." + permission + ".UUIDs").contains(target.getUniqueId().toString())) {
                     	PermissionsEx.getUser(target).removePermission(permission.replaceAll("_", "."));
                     	punishPlayer(target);
                     	UnfairPermsDetectedEvent event = new UnfairPermsDetectedEvent(target, permission.replaceAll("_", "."));
@@ -177,19 +211,21 @@ public class TooManyPerms extends JavaPlugin {
                 }
             }
         }
+    }
         /* Check for unfair groups, just add in config as many groups as you prefer! Works also with inheritance groups! */
-        for (String group : getConfig("permissions").getConfigurationSection("Groups").getKeys(false)) {
+    if(getConfig().getBoolean("Checks.Groups")) {
+        for (String group : getPermissions().getConfigurationSection("Groups").getKeys(false)) {
         	if(PermissionsEx.getUser(target).inGroup(group, true)) {
-        		if (getConfig("permissions").getBoolean("Groups." + group + ".Nick-check")) {
-        			if (!getConfig("permissions").getStringList("Groups." + group + ".Nicknames").contains(target.getName())) {
+        		if (getPermissions().getBoolean("Groups." + group + ".Nick-check")) {
+        			if (!getPermissions().getStringList("Groups." + group + ".Nicknames").contains(target.getName())) {
         				PermissionsEx.getUser(target).removeGroup(group);
                         punishPlayer(target);
                         UnfairGroupsDetectedEvent event = new UnfairGroupsDetectedEvent(target, group);
                         Bukkit.getPluginManager().callEvent(event);
                     }
         		}
-        		if (getConfig("permissions").getBoolean("Groups." + group + ".UUID-check")) {
-        			if (!getConfig("permissions").getStringList("Groups." + group + ".UUIDs").contains(target.getName())) {
+        		if (getPermissions().getBoolean("Groups." + group + ".UUID-check")) {
+        			if (!getPermissions().getStringList("Groups." + group + ".UUIDs").contains(target.getName())) {
         				PermissionsEx.getUser(target).removeGroup(group);
                         punishPlayer(target);
                         UnfairGroupsDetectedEvent event = new UnfairGroupsDetectedEvent(target, group);
@@ -199,11 +235,12 @@ public class TooManyPerms extends JavaPlugin {
         	}
         }
     }
+    }
     
     public ArrayList<String> getAllowedUsersForOp() {
     	ArrayList<String> list = new ArrayList<String>();
-        if (getConfig("permissions").getBoolean("Operators.Nick-check")) {
-            for (String uuid : getConfig("permissions").getStringList("Operators.Nicknames")) {
+        if (getPermissions().getBoolean("Operators.Nick-check")) {
+            for (String uuid : getPermissions().getStringList("Operators.Nicknames")) {
                 list.add(uuid);
             }
         }
@@ -215,8 +252,8 @@ public class TooManyPerms extends JavaPlugin {
     
     public ArrayList<String> getAllowedUUIDsForOp() {
     	ArrayList<String> list = new ArrayList<String>();
-        if (getConfig("permissions").getBoolean("Operators.UUID-check")) {
-            for (String uuid : getConfig("permissions").getStringList("Operators.UUIDs")) {
+        if (getPermissions().getBoolean("Operators.UUID-check")) {
+            for (String uuid : getPermissions().getStringList("Operators.UUIDs")) {
                 list.add(uuid);
             }
         }
@@ -228,11 +265,11 @@ public class TooManyPerms extends JavaPlugin {
     
     public ArrayList<String> getAllowedUsersForPerm(String perm) {
     	ArrayList<String> list = new ArrayList<String>();
-    	if (getConfig("permissions").getConfigurationSection("Permissions").getKeys(false).contains(perm)) {
-            for (String permission : getConfig("permissions").getConfigurationSection("Permissions").getKeys(false)) {
+    	if (getPermissions().getConfigurationSection("Permissions").getKeys(false).contains(perm)) {
+            for (String permission : getPermissions().getConfigurationSection("Permissions").getKeys(false)) {
                 if (perm.equalsIgnoreCase(permission)) {
-                    if (getConfig("permissions").getBoolean("Permissions." + permission + ".Nick-check")) {
-                        for (String nick : getConfig("permissions").getStringList("Permissions." + permission + ".Nicknames")) {
+                    if (getPermissions().getBoolean("Permissions." + permission + ".Nick-check")) {
+                        for (String nick : getPermissions().getStringList("Permissions." + permission + ".Nicknames")) {
                         	list.add(nick);
                         }
                     }
@@ -247,11 +284,11 @@ public class TooManyPerms extends JavaPlugin {
     
     public ArrayList<String> getAllowedUUIDsForPerm(String perm) {
     	ArrayList<String> list = new ArrayList<String>();
-    	if (getConfig("permissions").getConfigurationSection("Permissions").getKeys(false).contains(perm)) {
-            for (String permission : getConfig("permissions").getConfigurationSection("Permissions").getKeys(false)) {
+    	if (getPermissions().getConfigurationSection("Permissions").getKeys(false).contains(perm)) {
+            for (String permission : getPermissions().getConfigurationSection("Permissions").getKeys(false)) {
                 if (perm.equalsIgnoreCase(permission)) {
-                    if (getConfig("permissions").getBoolean("Permissions." + permission + ".UUID-check")) {
-                        for (String uuid : getConfig("permissions").getStringList("Permissions." + permission + ".UUIDs")) {
+                    if (getPermissions().getBoolean("Permissions." + permission + ".UUID-check")) {
+                        for (String uuid : getPermissions().getStringList("Permissions." + permission + ".UUIDs")) {
                             list.add(uuid);
                         }
                     }
@@ -266,11 +303,11 @@ public class TooManyPerms extends JavaPlugin {
     
     public ArrayList<String> getAllowedUsersForGroup(String group) {
     	ArrayList<String> list = new ArrayList<String>();
-    	if (getConfig("permissions").getConfigurationSection("Groups").getKeys(false).contains(group)) {
-            for (String checkgroup : getConfig("permissions").getConfigurationSection("Groups").getKeys(false)) {
+    	if (getPermissions().getConfigurationSection("Groups").getKeys(false).contains(group)) {
+            for (String checkgroup : getPermissions().getConfigurationSection("Groups").getKeys(false)) {
                 if (group.equalsIgnoreCase(checkgroup)) {
-                    if (getConfig("permissions").getBoolean("Groups." + checkgroup + ".Nick-check")) {
-                        for (String uuid : getConfig("permissions").getStringList("Groups." + checkgroup + ".Nicknames")) {
+                    if (getPermissions().getBoolean("Groups." + checkgroup + ".Nick-check")) {
+                        for (String uuid : getPermissions().getStringList("Groups." + checkgroup + ".Nicknames")) {
                             list.add(uuid);
                         }
                     }
@@ -285,11 +322,11 @@ public class TooManyPerms extends JavaPlugin {
     
     public ArrayList<String> getAllowedUUIDsForGroup(String group) {
     	ArrayList<String> list = new ArrayList<String>();
-    	if (getConfig("permissions").getConfigurationSection("Groups").getKeys(false).contains(group)) {
-            for (String checkgroup : getConfig("permissions").getConfigurationSection("Groups").getKeys(false)) {
+    	if (getPermissions().getConfigurationSection("Groups").getKeys(false).contains(group)) {
+            for (String checkgroup : getPermissions().getConfigurationSection("Groups").getKeys(false)) {
                 if (group.equalsIgnoreCase(checkgroup)) {
-                    if (getConfig("permissions").getBoolean("Groups." + checkgroup + ".UUID-check")) {
-                        for (String uuid : getConfig("permissions").getStringList("Groups." + checkgroup + ".UUIDs")) {
+                    if (getPermissions().getBoolean("Groups." + checkgroup + ".UUID-check")) {
+                        for (String uuid : getPermissions().getStringList("Groups." + checkgroup + ".UUIDs")) {
                             list.add(uuid);
                         }
                     }

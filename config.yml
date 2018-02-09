@@ -1,0 +1,11 @@
+#
+#     TooManyPerms v1.0.3-ALPHA
+#      Coded by Alex_Delpier02
+#   "No matter what, NSSJ all life"
+#
+# github.com/AlexDelpier02/TooManyPerms
+#
+Checks:
+  OP: true
+  Permissions: true
+  Groups: true

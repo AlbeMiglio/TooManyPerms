@@ -31,7 +31,7 @@ public class UnfairGroupsDetectedEvent extends Event implements Cancellable {
         return this.p;
     }
     
-    public String getPermission() {
+    public String getGroup() {
     	return this.group;
     }
 

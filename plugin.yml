@@ -1,7 +1,7 @@
 name: TooManyPerms
 author: Alex_Delpier02
 website: github.com/AlexDelpier02/TooManyPerms/
-version: 1.0.2-BETA
+version: 1.0.3-ALPHA
 main: it.mycraft.toomanyperms.TooManyPerms
 depend: [PermissionsEx]
 commands:
