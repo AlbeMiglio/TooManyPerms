@@ -6,6 +6,9 @@
 # github.com/AlexDelpier02/TooManyPerms
 #
 Punish: true
-Punish Commands: #Type here as many CONSOLE commands as you want! It will trigger when someone has too many perms
+
+#Type here as many commands as you want! It will trigger when someone has too many perms!
+#If the command starts with a '@', it will be run from console!
+Punish Commands:
 - "@ban %player% You're not welcome"
 - "@say %player% got too many permissions"
