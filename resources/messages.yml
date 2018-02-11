@@ -1,23 +1,33 @@
 #
-#     TooManyPerms v1.0.3-ALPHA
+#       TooManyPerms v1.0.4
 #      Coded by Alex_Delpier02
-#   "No matter what, NSSJ all life"
 #
 # github.com/AlexDelpier02/TooManyPerms
 #
 Messages:
   Use-Prefix: true
   Prefix: "&8[&bTooManyPerms&8] "
+  
   Not-Enough-Permissions: "&cNot enough permissions!"
+  
   Success-Reload: "&aPlugin successfully reloaded!"
+  
   Op-Protection-Disabled: "&aOP is not protected because both Nick-check and UUID-check are set to false!"
+  
   Perm-Not-Protected: "&aThe perm %perm% is not protected!"
+  
   Group-Not-Protected: "&aThe group %group% is not protected!"
+  
   Op-Nicks-List: "&9Protected nicks for operators: %list%"
+  
   Op-UUIDs-List: "&9Protected UUIDs for operators: %list%"
+  
   Perm-Nicks-List: "&9Protected nicks for perm %perm%: %list%"
+  
   Perm-UUIDs-List: "&9Protected UUIDs for perm %perm%: %list%"
+  
   Group-Nicks-List: "&9Protected nicks for group %group%: %list%"
+  
   Group-UUIDs-List: "&9Protected UUIDs for group %group%: %list%"
   
 

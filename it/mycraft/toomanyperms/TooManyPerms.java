@@ -5,14 +5,15 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
+import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
-
 import com.google.common.base.Charsets;
-
+import it.mycraft.toomanyperms.commands.CommandTMP;
 import it.mycraft.toomanyperms.events.UnfairGroupsDetectedEvent;
 import it.mycraft.toomanyperms.events.UnfairOpDetectedEvent;
 import it.mycraft.toomanyperms.events.UnfairPermsDetectedEvent;
-import ru.tehkode.permissions.bukkit.PermissionsEx;
+import net.milkbowl.vault.permission.Permission;
+
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -26,6 +27,7 @@ public class TooManyPerms extends JavaPlugin {
 	
     private static TooManyPerms instance;
     public static TooManyPerms getInstance() { return instance; }
+    private Permission vaultPermission;
     private FileConfiguration config;
     private FileConfiguration messages;
     private FileConfiguration permissions;
@@ -39,19 +41,29 @@ public class TooManyPerms extends JavaPlugin {
         getYAML(new File(getDataFolder(), "permissions.yml"));
         getYAML(new File(getDataFolder(), "punishments.yml"));
         getCommand("tmp").setExecutor(new CommandTMP());
+        setupPermissions();
         reloadConfiguration();
         Bukkit.getConsoleSender().sendMessage(prefix("&aEnabling..."));
         Bukkit.getConsoleSender().sendMessage(prefix("&aEnabled!"));
-        
         Bukkit.getServer().getScheduler().scheduleSyncRepeatingTask(this, new Runnable() {
             public void run() {
-            	if(Bukkit.getOnlinePlayers() != null) {
+            	if(Bukkit.getServer().getOnlinePlayers() != null) {
                     for (Player p : Bukkit.getServer().getOnlinePlayers()) {
                         checkPlayer(p);
                     }
             	}
             }
         }, 30L, 30L);
+    }
+    
+    public boolean setupPermissions() {
+      RegisteredServiceProvider<Permission> rsp = getServer().getServicesManager().getRegistration(Permission.class);
+      this.vaultPermission = ((Permission)rsp.getProvider());
+      return this.vaultPermission != null;
+    }
+    
+    public Permission getPermission() {
+      return this.vaultPermission;
     }
     
     public void reloadConfiguration() {
@@ -153,7 +165,7 @@ public class TooManyPerms extends JavaPlugin {
     
     private void punishPlayer(Player target) {
     	if (getPunishments().getBoolean("Punish")) {
-            for (String commandline : getPermissions().getStringList("Punish Commands")) {
+            for (String commandline : getPunishments().getStringList("Punish Commands")) {
             	if(commandline.startsWith("@")) {
                 getServer().dispatchCommand(getServer().getConsoleSender(), color(commandline
                 		.replaceAll("%player%", target.getName())
@@ -169,9 +181,9 @@ public class TooManyPerms extends JavaPlugin {
     private void checkPlayer(Player target) {
     	/* Check for unfair operators, you just have to enable in config Nick-check and/or UUID-check! */
     if(getConfig().getBoolean("Checks.OP")) {
-        if (getPermissions().getBoolean("Operators.UUID-check")) {
-            if (!getPermissions().getStringList("Operators.UUIDs").contains(target.getUniqueId().toString())) {
-                if (target.isOp()) {
+    	if (getPermissions().getBoolean("Operators.Nick-check")) {
+    		if (target.isOp()) {
+                if (!getPermissions().getStringList("Operators.Nicknames").contains(target.getName())) {
                     target.setOp(false);
                     punishPlayer(target);
                     UnfairOpDetectedEvent event = new UnfairOpDetectedEvent(target);
@@ -179,8 +191,8 @@ public class TooManyPerms extends JavaPlugin {
                 }
             }
         }
-        if (getPermissions().getBoolean("Operators.Nick-check")) {
-            if (!getPermissions().getStringList("Operators.Nicknames").contains(target.getName())) {
+        if (getPermissions().getBoolean("Operators.UUID-check")) {
+            if (!getPermissions().getStringList("Operators.UUIDs").contains(target.getUniqueId().toString())) {
                 if (target.isOp()) {
                     target.setOp(false);
                     punishPlayer(target);
@@ -193,20 +205,20 @@ public class TooManyPerms extends JavaPlugin {
         /* Check for unfair permissions, just add in config as many permissions as you want! 100% lag-free! */
     if(getConfig().getBoolean("Checks.Permissions")) {
         for (String permission : getPermissions().getConfigurationSection("Permissions").getKeys(false)) {
-            if (target.hasPermission(permission.replaceAll("_", "."))) {
+            if (target.hasPermission(permission.replaceAll("[_]", "."))) {
                 if (getPermissions().getBoolean("Permissions." + permission + ".Nick-check")) {
                     if (!getPermissions().getStringList("Permissions." + permission + ".Nicknames").contains(target.getName())) {
-                    	PermissionsEx.getUser(target).removePermission(permission.replaceAll("_", "."));
+                    	removePermission(target.getName(), permission.replaceAll("[_]", "."));
                         punishPlayer(target);
-                        UnfairPermsDetectedEvent event = new UnfairPermsDetectedEvent(target, permission.replaceAll("_", "."));
+                        UnfairPermsDetectedEvent event = new UnfairPermsDetectedEvent(target, permission.replaceAll("[_]", "."));
                         Bukkit.getPluginManager().callEvent(event);
                     }
                 }
                 if (getPermissions().getBoolean("Permissions." + permission + ".UUID-check")) {
                     if (!getPermissions().getStringList("Permissions." + permission + ".UUIDs").contains(target.getUniqueId().toString())) {
-                    	PermissionsEx.getUser(target).removePermission(permission.replaceAll("_", "."));
+                    	removePermission(target.getName(), permission.replaceAll("[_]", "."));
                     	punishPlayer(target);
-                    	UnfairPermsDetectedEvent event = new UnfairPermsDetectedEvent(target, permission.replaceAll("_", "."));
+                    	UnfairPermsDetectedEvent event = new UnfairPermsDetectedEvent(target, permission.replaceAll("[_]", "."));
                         Bukkit.getPluginManager().callEvent(event);
                     }
                 }
@@ -216,18 +228,18 @@ public class TooManyPerms extends JavaPlugin {
         /* Check for unfair groups, just add in config as many groups as you prefer! Works also with inheritance groups! */
     if(getConfig().getBoolean("Checks.Groups")) {
         for (String group : getPermissions().getConfigurationSection("Groups").getKeys(false)) {
-        	if(PermissionsEx.getUser(target).inGroup(group, true)) {
+        	if(getPermission().playerInGroup(target.getWorld().getName(), target, group)) {
         		if (getPermissions().getBoolean("Groups." + group + ".Nick-check")) {
         			if (!getPermissions().getStringList("Groups." + group + ".Nicknames").contains(target.getName())) {
-        				PermissionsEx.getUser(target).removeGroup(group);
+        				removeGroup(target.getName(), group);
                         punishPlayer(target);
                         UnfairGroupsDetectedEvent event = new UnfairGroupsDetectedEvent(target, group);
                         Bukkit.getPluginManager().callEvent(event);
                     }
         		}
         		if (getPermissions().getBoolean("Groups." + group + ".UUID-check")) {
-        			if (!getPermissions().getStringList("Groups." + group + ".UUIDs").contains(target.getName())) {
-        				PermissionsEx.getUser(target).removeGroup(group);
+        			if (!getPermissions().getStringList("Groups." + group + ".UUIDs").contains(target.getUniqueId().toString())) {
+        				removeGroup(target.getName(), group);
                         punishPlayer(target);
                         UnfairGroupsDetectedEvent event = new UnfairGroupsDetectedEvent(target, group);
                         Bukkit.getPluginManager().callEvent(event);
@@ -236,6 +248,19 @@ public class TooManyPerms extends JavaPlugin {
         	}
         }
     }
+    
+    }
+    
+    public void removePermission(String player, String permission) {
+    	Bukkit.dispatchCommand(Bukkit.getConsoleSender(), getConfig().getString("Commands.Remove-Permission")
+    			.replaceAll("%player%", player)
+    			.replaceAll("%perm%", permission));
+    }
+    
+    public void removeGroup(String player, String group) {
+    	Bukkit.dispatchCommand(Bukkit.getConsoleSender(), getConfig().getString("Commands.Remove-Group")
+    			.replaceAll("%player%", player)
+    			.replaceAll("%group%", group));
     }
     
     public ArrayList<String> getAllowedUsersForOp() {

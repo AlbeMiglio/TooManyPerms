@@ -1,0 +1,15 @@
+#
+#       TooManyPerms v1.0.4
+#      Coded by Alex_Delpier02
+#
+# github.com/AlexDelpier02/TooManyPerms
+#
+
+Checks:
+  OP: true
+  Permissions: true
+  Groups: true
+  
+Commands:
+  Remove-Permission: "pex user %player% remove %perm%"
+  Remove-Group: "pex user %player% group remove %group%"
