@@ -204,7 +204,7 @@ public class TooManyPerms extends JavaPlugin {
     }
         /* Check for unfair permissions, just add in config as many permissions as you want! 100% lag-free! */
     if(getConfig().getBoolean("Checks.Permissions")) {
-        for (String permission : getPermissions().getConfigurationSection("Permissions").getKeys(false)) {
+        for (String permission : getPermissions().getConfigurationSection("Permissions").getKeys(true)) {
             if (target.hasPermission(permission.replaceAll("[_]", "."))) {
                 if (getPermissions().getBoolean("Permissions." + permission + ".Nick-check")) {
                     if (!getPermissions().getStringList("Permissions." + permission + ".Nicknames").contains(target.getName())) {
