@@ -1,7 +1,7 @@
 name: TooManyPerms
 author: Alex_Delpier02
 website: github.com/AlexDelpier02/TooManyPerms/
-version: 1.0.4
+version: 1.0.5
 main: it.mycraft.toomanyperms.TooManyPerms
 depend: [Vault]
 commands:
@@ -15,6 +15,7 @@ permissions:
       tmp.check: true
       tmp.opcheck: true
       tmp.groupcheck: true
+      tmp.version: true
   tmp.checks:
     default: op
     children:
@@ -30,4 +31,6 @@ permissions:
   tmp.opcheck:
     default: false
   tmp.groupcheck: 
+    default: false
+  tmp.version:
     default: false

@@ -6,6 +6,7 @@ public enum Permissions {
   RELOAD_COMMAND("tmp.reload"),  
   CHECK_COMMAND("tmp.check"),  
   OPCHECK_COMMAND("tmp.opcheck"),
+  VERSION_COMMAND("tmp.version"),
   GROUPCHECK_COMMAND("tmp.groupcheck");
   
   private String perm;

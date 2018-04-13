@@ -151,7 +151,7 @@ public class TooManyPerms extends JavaPlugin {
         }
     }
     
-    private String prefix(String message) {
+    public String prefix(String message) {
         if(getMessages().getBoolean("Messages.Use-Prefix")) {
         	String prefix = getMessages().getString("Messages.Prefix");
         	return color(prefix + message);
@@ -159,7 +159,7 @@ public class TooManyPerms extends JavaPlugin {
         else return color(message);
     }
     
-    private String color(String message) {
+    public String color(String message) {
         return ChatColor.translateAlternateColorCodes('&', message);
     }
     
