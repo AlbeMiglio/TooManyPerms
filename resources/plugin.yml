@@ -1,6 +1,6 @@
 name: TooManyPerms
-author: Alex_Delpier02
-website: github.com/AlexDelpier02/TooManyPerms/
+author: AlbeMiglio
+website: github.com/AlbeMiglio/TooManyPerms/
 version: 1.0.5
 main: it.mycraft.toomanyperms.TooManyPerms
 depend: [Vault]
