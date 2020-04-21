@@ -1,11 +1,13 @@
 name: TooManyPerms
 author: AlbeMiglio
 website: github.com/AlbeMiglio/TooManyPerms/
-version: 1.0.5
+version: 1.0.6
 main: it.mycraft.toomanyperms.TooManyPerms
 depend: [Vault]
 commands:
-  tmp: 
+  tmp:
+    description: Main command
+    aliases: [toomanyperms]
 permissions:
   tmp.admin:
     default: op

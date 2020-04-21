@@ -31,7 +31,7 @@ public class CommandTMP implements CommandExecutor {
                     return false;
                 } 
                 else {
-                	main.reloadConfiguration();
+                	main.getConfigManager().reloadConfiguration();
                     sender.sendMessage(main.prefix(getMessages().getString("Messages.Success-Reload")));
                     return false;
                 }
@@ -44,7 +44,7 @@ public class CommandTMP implements CommandExecutor {
                 } 
                 else {
                 	String version = main.getDescription().getVersion();
-                    sender.sendMessage(main.prefix("&bThis server runs TooManyPerms v"+version+" by Alex_Delpier02"));
+                    sender.sendMessage(main.prefix("&bThis server runs TooManyPerms v"+version+" by AlbeMiglio"));
                     return false;
                 }
             }
@@ -163,7 +163,7 @@ public class CommandTMP implements CommandExecutor {
                 }
                 return false;
             }
-            /* If the args[0] is not reload, check, opcheck or groupcheck, usageCommand will be sent to the commandSender. */ 
+            /* If the args[0] is not [reload, check, opcheck, groupcheck], usageCommand will be sent to the commandSender. */
             else {
                 usageCommand(sender);
                 return false;
@@ -190,7 +190,7 @@ public class CommandTMP implements CommandExecutor {
         }
     }
     
-    private FileConfiguration getMessages() { return main.getMessages(); }
+    private FileConfiguration getMessages() { return main.getConfigManager().getMessages(); }
     
-    private FileConfiguration getPermissions() { return main.getPermissions(); }
+    private FileConfiguration getPermissions() { return main.getConfigManager().getPermissions(); }
 }

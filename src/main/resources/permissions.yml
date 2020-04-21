@@ -1,16 +1,22 @@
 #
-#       TooManyPerms v1.0.5
-#      Coded by Alex_Delpier02
+#       TooManyPerms v1.0.6
+#      Coded by AlbeMiglio
 #
-# github.com/AlexDelpier02/TooManyPerms
+# github.com/AlbeMiglio/TooManyPerms
 #
+
+
+Excluded-Nicknames: # These nicknames will be excluded from TooManyPerms checks. It means they don't have any limits!
+  - AlbeMiglio
+  - pompiere1
+  - example1
+
 Operators:
   Nick-check: true
   UUID-check: false
   Nicknames: # If Nick-check is set to false, you can clear this section
-  - Alex_Delpier02
-  - pompiere1
-  - example1
+  - MyOperator
+  - AnotherOperator
   UUIDs: # If UUID-check is set to false, you can clear this section
   - 80e74556-3daa-397e-8982-4f3ab0042a5d
 
@@ -19,18 +25,16 @@ Permissions:
     Nick-check: true
     UUID-check: false
     Nicknames: # If Nick-check is set to false, you can clear this section
-    - Alex_Delpier02
-    - pompiere1
-    - example1
+    - OnlyAdmins
+    - Please
     UUIDs: # If UUID-check is set to false, you can clear this section
     - 80e74556-3daa-397e-8982-4f3ab0042a5d
   'permissions_*': # IMPORTANT! You MUST NOT type points in these permissions! Use underscore ( _ ) instead!
     Nick-check: true
     UUID-check: false
     Nicknames:
-    - Alex_Delpier02
-    - pompiere1
-    - example1
+    - MyStaff
+    - Manager
     UUIDs:
     - 80e74556-3daa-397e-8982-4f3ab0042a5d
     
@@ -39,18 +43,16 @@ Groups:
     Nick-check: true
     UUID-check: false
     Nicknames: # If Nick-check is set to false, you can clear this section
-    - Alex_Delpier02
-    - pompiere1
-    - example1
+    - FirstOwner
+    - SecondOne
     UUIDs: # If UUID-check is set to false, you can clear this section
     - 80e74556-3daa-397e-8982-4f3ab0042a5d
   Admin:
     Nick-check: true
     UUID-check: false
     Nicknames: 
-    - Alex_Delpier02
-    - pompiere1
-    - example1
+    - MyFirstAdmin
+    - SecondAdmin
     UUIDs: 
     - 80e74556-3daa-397e-8982-4f3ab0042a5d
     
