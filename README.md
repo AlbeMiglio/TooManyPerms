@@ -5,6 +5,7 @@
 [![Discord](https://img.shields.io/discord/618742870035398684?logo=Join%20on%20Discord)](https://discord.gg/XuBvVG8)
 [![](https://jitpack.io/v/AlbeMiglio/TooManyPerms.svg)](https://jitpack.io/#AlbeMiglio/TooManyPerms)
 [![Rating](https://img.shields.io/spiget/rating/53086?label=Rating%20on%20SpigotMC)](http://www.spigotmc.org/resources/53086/)
+[![Donate](https://img.shields.io/badge/Donate-PayPal-green.svg)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=PXWGWLK6C4D2A&source=url)
 
 ## Import with Maven
 - To hook this plugin into your project with Maven, you just need to add to your pom.xml the repositories and dependencies below:
