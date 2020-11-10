@@ -5,7 +5,6 @@ import lombok.Getter;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
-
 import java.io.*;
 import java.util.Arrays;
 import java.util.logging.Level;
