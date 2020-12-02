@@ -1,9 +1,9 @@
 name: TooManyPerms
 author: AlbeMiglio
 website: github.com/AlbeMiglio/TooManyPerms/
-version: 1.0.6
+version: 1.0.7
 main: it.mycraft.toomanyperms.TooManyPerms
-depend: [Vault]
+depend: [Vault, PowerLib]
 commands:
   tmp:
     description: Main command

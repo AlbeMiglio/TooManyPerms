@@ -31,7 +31,7 @@ public class CommandTMP implements CommandExecutor {
                     return false;
                 } 
                 else {
-                	main.getConfigManager().reloadConfiguration();
+                	main.getConfigManager().reloadAll();
                     sender.sendMessage(main.prefix(getMessages().getString("Messages.Success-Reload")));
                     return false;
                 }
@@ -67,7 +67,7 @@ public class CommandTMP implements CommandExecutor {
                 String uuidsList = "";
                 if(getPermissions().getConfigurationSection("Permissions").getKeys(false).contains(perm)) {
                   if(getPermissions().getBoolean("Permissions."+perm+".Nick-check")) {
-                    for (String nick : main.getAllowedUsersForPerm(perm)) {
+                    for (String nick : main.getPermissionsManager().getAllowedUsersForPerm(perm)) {
                         nicksList += nick + "; ";
                     }
                     sender.sendMessage(main.prefix(getMessages().getString("Messages.Perm-Nicks-List"))
@@ -75,7 +75,7 @@ public class CommandTMP implements CommandExecutor {
                 		.replaceAll("%list%", nicksList));
                   }
                   if(getPermissions().getBoolean("Permissions."+perm+".UUID-check")) {
-                    for (String uuid : main.getAllowedUUIDsForPerm(perm)) {
+                    for (String uuid : main.getPermissionsManager().getAllowedUUIDsForPerm(perm)) {
                         uuidsList += uuid + "; ";
                     }
                     sender.sendMessage(main.prefix(getMessages().getString("Messages.Perm-UUIDs-List"))
@@ -109,7 +109,7 @@ public class CommandTMP implements CommandExecutor {
                 }
                 if(getPermissions().getConfigurationSection("Groups").getKeys(false).contains(group)) {
                   if(getPermissions().getBoolean("Groups."+group+".Nick-check")) {
-                    for (String nick : main.getAllowedUsersForGroup(group)) {
+                    for (String nick : main.getPermissionsManager().getAllowedUsersForGroup(group)) {
                         nicksList += nick + "; ";
                     }
                     sender.sendMessage(main.prefix(getMessages().getString("Messages.Group-Nicks-List"))
@@ -117,7 +117,7 @@ public class CommandTMP implements CommandExecutor {
                 		.replaceAll("%list%", nicksList));
                   }
                   if(getPermissions().getBoolean("Groups."+group+".UUID-check")) {
-                    for (String uuid : main.getAllowedUUIDsForGroup(group)) {
+                    for (String uuid : main.getPermissionsManager().getAllowedUUIDsForGroup(group)) {
                         uuidsList += uuid + "; ";
                     }
                     sender.sendMessage(main.prefix(getMessages().getString("Messages.Group-UUIDs-List"))
@@ -190,7 +190,7 @@ public class CommandTMP implements CommandExecutor {
         }
     }
     
-    private FileConfiguration getMessages() { return main.getConfigManager().getMessages(); }
+    private FileConfiguration getMessages() { return main.getMessages(); }
     
-    private FileConfiguration getPermissions() { return main.getConfigManager().getPermissions(); }
+    private FileConfiguration getPermissions() { return main.getPermissions(); }
 }
