@@ -2,7 +2,7 @@
 [![Build Status](https://travis-ci.com/AlbeMiglio/TooManyPerms.svg?branch=master)](https://travis-ci.com/AlbeMiglio/TooManyPerms)
 [![License](https://img.shields.io/badge/license-GNU%20General%20Public%20License%20v3.0-brightgreen)](https://github.com/AlbeMiglio/TooManyPerms/blob/master/LICENSE)
 ![GitHub All Releases](https://img.shields.io/github/downloads/AlbeMiglio/TooManyPerms/total?color=brightgreen)
-[![Discord](https://img.shields.io/discord/618742870035398684?logo=Join%20on%20Discord)](https://discord.gg/XuBvVG8)
+[![Discord](https://img.shields.io/discord/618742870035398684?logo=Join%20on%20Discord)](https://discord.com/invite/UMhsCZk)
 [![](https://jitpack.io/v/AlbeMiglio/TooManyPerms.svg)](https://jitpack.io/#AlbeMiglio/TooManyPerms)
 [![Rating](https://img.shields.io/spiget/rating/53086?label=Rating%20on%20SpigotMC)](http://www.spigotmc.org/resources/53086/)
 [![Donate](https://img.shields.io/badge/Donate-PayPal-green.svg)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=PXWGWLK6C4D2A&source=url)
